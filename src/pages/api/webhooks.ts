@@ -1,10 +1,7 @@
-import { NextApiRequest, NextApiResponse } from "next"
-
-import Stripe from 'stripe'
-
+import { NextApiRequest, NextApiResponse } from "next";
 import { stripe } from '../../service/stripe'
-
 import { Readable } from 'stream'
+import Stripe from "stripe";
 
 async function buffer(readable: Readable) {
   const chunks = [];
@@ -12,36 +9,53 @@ async function buffer(readable: Readable) {
   for await (const chunk of readable) {
     chunks.push(
       typeof chunk === "string" ? Buffer.from(chunk) : chunk
-    );
+    )
   }
+  return Buffer.concat(chunks);
 
-  return Buffer.concat(chunks)
 }
 
 export const config = {
   api: {
     bodyParser: false
-    
   }
 }
 
-export default async (request: NextApiRequest, response: NextApiResponse) => {
-  if (request.method === 'POST') {
-    const buf = await buffer(request)
-    const secret = request.headers['stripe-signature']
+const relevantEvents = new Set([
+  "checkout.session.completed"
+])
 
-    let event = Stripe.EventsResource
+export default async (req: NextApiRequest, res: NextApiResponse) => {
+  if (req.method === "POST") {
+    const buf = await buffer(req)
+    const secret = req.headers['stripe-signature'];
 
-    try { 
-      event = stripe.webhooks.constructEvent(buf, secret, process.env.STRIPE_WEBHOOK_SECRET)
+    let event: Stripe.Event;
+
+    try {
+      event = stripe.webhooks.constructEvent(buf, secret, process.env.STRIPE_WEBHOOK_SECRET);
     } catch (err) {
-
+      console.log(process.env.STRIPE_WEBHOOK_SECRET)
+      console.log(`Erro ${err.message}`);
+      return res.status(400).send(`Webhook error: ${err.message}`)
     }
 
-    response.status(200).json({
-      ok: true
-    }) 
+    const { type } = event
+
+    if (relevantEvents.has(type)) {
+      console.log('Evento recebido', event)
+    }
+    return res.json({ received: true })
+  } else {
+    res.setHeader('Allow', 'POST')
+    return res.status(405).end('Method not allowed')
   }
-  console.log('Chegou')
 
 }
+
+// export default async (req: NextApiRequest, res: NextApiResponse) => {
+//   console.log(req)
+//   console.log('Evento recebido')
+
+//   res.status(200).json({ Ok: true })
+// }
