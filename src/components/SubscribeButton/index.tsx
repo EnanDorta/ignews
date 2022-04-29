@@ -18,9 +18,7 @@ export function SubscribeButton({ priceId }: SubscribeButtonProps) {
     } 
     try {
       const response = await api.post('/subscribe')
-
-      const responseTwo = await api.post('webhooks')
-
+      
       const { two } = response.data
 
       console.log(two)
