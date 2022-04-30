@@ -22,8 +22,8 @@ export default NextAuth({
   //   signingKey: process.env.SIGNIN_KEY,
   // },
   callbacks: {
-    async signIn({ user, account, email, profile, credentials }) {
-      const Email = user.email
+    async signIn({ user, account, profile, credentials }) {
+      const email = user.email
       try {
         await fauna.query(
           query.If(
@@ -31,18 +31,18 @@ export default NextAuth({
               query.Exists(
                 query.Match(
                   query.Index('user_by_email'),
-                  query.Casefold(Email)
+                  query.Casefold(email)
                )
             )
           ),
           query.Create(
             query.Collection('users'),
-            { data: { Email } }
+            { data: { email } }
           ),
           query.Get(
             query.Match(
               query.Index('user_by_email'),
-              query.Casefold(Email)
+              query.Casefold(email)
             )
           )
         )
