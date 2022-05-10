@@ -1,0 +1,30 @@
+{
+  "id": "40c9ea84-9589-4d4f-845c-0a5faa62d870",
+  "uid": "nisi-nihil-vel",
+  "type": "Publication-id",
+  "data": {
+    "Title": "reintermediate distributed models",
+    "Content": [
+      {
+        "type": "heading1",
+        "text": "Repurpose e-business e-markets",
+        "spans": []
+      },
+      {
+        "type": "image",
+        "dimensions": {
+          "width": 900,
+          "height": 500
+        },
+        "alt": "Placeholder image",
+        "copyright": null,
+        "url": "https://images.unsplash.com/photo-1531771686035-25f47595c87a?w=900&h=500&fit=crop"
+      },
+      {
+        "type": "paragraph",
+        "text": "Tempor anim aliqua enim. Nulla sunt cupidatat officia aliquip ipsum id do proident laboris pariatur ullamco ea ullamco nostrud non. Pariatur anim voluptate excepteur pariatur consequat minim ex proident.",
+        "spans": []
+      }
+    ]
+  }
+}
