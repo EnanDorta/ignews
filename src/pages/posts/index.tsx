@@ -1,3 +1,6 @@
+import { GetStaticProps } from 'next'
+import { getPrismicClient } from '../../service/prismic'
+import Prismic from '@prismicio/client'
 import Head from 'next/head'
 import styles from './styles.module.scss'
 
@@ -28,4 +31,21 @@ export default function () {
       </main>
     </>
   )
+}
+
+export const getStaticProps: GetStaticProps = async () => {
+  const prismic = getPrismicClient()
+
+  const response = await prismic.query([
+    Prismic.predicates.at('document.type', 'Publication-id')
+  ], {
+    fetch: ['publication.title', 'publication.content'],
+    pageSize: 100,
+  })
+
+  console.log(JSON.stringify(response, null, 2))
+
+  return {
+    props: {}
+  }
 }
