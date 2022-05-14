@@ -3,8 +3,21 @@ import { getPrismicClient } from '../../service/prismic'
 import Prismic from '@prismicio/client'
 import Head from 'next/head'
 import styles from './styles.module.scss'
+import { RichText } from 'prismic-dom'
 
-export default function () {
+type Post = {
+  slug: string;
+  title: string;
+  excerpt: string;
+  updatedAt: string;
+};
+
+interface PostProps {
+  posts: Post[];
+}
+
+
+export default function Posts ({ posts }: PostProps) {
   return (
     <>
       <Head> 
@@ -12,21 +25,15 @@ export default function () {
       </Head>
       <main className={styles.container}>
         <div className={styles.posts}>
-          <a href="">
-            <time>11 de maio de 2022</time>
-            <strong>Creating a Monorep with Lerna & Yarn Workspace</strong>
-            <p>In this guide, you will learn how to create a Monorepo to manage multiple packages with a shared build, test, and release process.</p>
-          </a>
-          <a href="">
-            <time>11 de maio de 2022</time>
-            <strong>Creating a Monorep with Lerna & Yarn Workspace</strong>
-            <p>In this guide, you will learn how to create a Monorepo to manage multiple packages with a shared build, test, and release process.</p>
-          </a>
-          <a href="">
-            <time>11 de maio de 2022</time>
-            <strong>Creating a Monorep with Lerna & Yarn Workspace</strong>
-            <p>In this guide, you will learn how to create a Monorepo to manage multiple packages with a shared build, test, and release process.</p>
-          </a>
+          {
+            posts.map(post => (
+              <a key={post.slug} href="#">
+                <time>{post.updatedAt}</time>
+                <strong>{post.title}</strong>
+                <p>{post.excerpt}</p>
+              </a>
+            ))
+          }
         </div>
       </main>
     </>
@@ -36,16 +43,31 @@ export default function () {
 export const getStaticProps: GetStaticProps = async () => {
   const prismic = getPrismicClient()
 
-  const response = await prismic.query([
+  const response = await prismic.query<any>([
     Prismic.predicates.at('document.type', 'Publication-id')
   ], {
     fetch: ['publication.title', 'publication.content'],
     pageSize: 100,
   })
 
+  const posts = response.results.map(post => {
+    return {
+      slug: post.uid,
+      title: post.data.title,
+      excerpt: post.data.content.find(content => content.type === 'paragraph')?.text ?? '',
+      updatedAt: new Date(post.last_publication_date).toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric'
+      })
+    }
+  })
+
   console.log(JSON.stringify(response, null, 2))
 
   return {
-    props: {}
+    props: {
+      posts
+    }
   }
 }

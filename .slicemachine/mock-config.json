@@ -1,7 +1,7 @@
 {
   "_cts": {
     "Publication-id": {
-      "Content": {
+      "content": {
         "config": {
           "patternType": "STORY",
           "blocks": 1
