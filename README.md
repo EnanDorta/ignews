@@ -16,12 +16,11 @@
   <img alt="second photo" src=".github/secondPhoto.png" width="100%">
 </p>
 <p align="center"> 
-  <img alt="third photo" src=".github/third.png" width="100%">
+  <img alt="third photo" src=".github/thirdPhoto.png" width="100%">
 </p>
 <p align="center"> 
-  <img alt="fourt photo" src=".github/fourtPhoto.png.png" width="100%">
+  <img alt="fourt photo" src=".github/fourtPhoto.png" width="100%">
 </p>
-
 <br>
 
 ## Tecnologias
