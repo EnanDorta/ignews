@@ -2,14 +2,14 @@ import { GetStaticProps } from 'next';
 import Head from 'next/head';
 
 import { SubscribeButton } from '../components/SubscribeButton';
-import { stripe } from '../service/stripe';
+import { stripe } from '../services/stripe';
 
 import styles from './home.module.scss';
 
 interface HomeProps {
   product: {
-    prieceId: string,
-    amount: number,
+    priceId: string,
+    amount: string,
   }
 }
 
@@ -27,7 +27,7 @@ export default function Home({ product }: HomeProps) {
             Get acess to all the publications <br />
             <span>for {product.amount} month</span>
           </p>
-          <SubscribeButton priceId={product.prieceId}/>
+          <SubscribeButton/>
         </section> 
 
           <img src="/images/avatar.svg" alt="girl coding" />

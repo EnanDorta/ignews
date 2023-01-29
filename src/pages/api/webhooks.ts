@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { stripe } from '../../service/stripe'
+import { stripe } from '../../services/stripe'
 import { Readable } from 'stream'
 import Stripe from "stripe";
 import { saveSubscription } from "./_lib/manageSubscription";
@@ -34,7 +34,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       event = stripe.webhooks.constructEvent(buf, secret, process.env.STRIPE_WEBHOOK_SECRET);
     } catch (err) {
-      console.log(process.env.STRIPE_WEBHOOK_SECRET)
       console.log(`Erro ${err.message}`);
       return res.status(400).send(`Webhook error: ${err.message}`)
     }
